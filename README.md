@@ -281,4 +281,4 @@ pytest tests/ -v
 
 
 Tanu Sharma
-[LinkedIn](https://linkedin.com/in/tanusharma) | [GitHub](https://github.com/tanusharma)
+[LinkedIn](https://www.linkedin.com/in/sharmatanu20/) | [GitHub](https://github.com/sharmatanu2092)
