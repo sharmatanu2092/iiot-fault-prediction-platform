@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-cloud:
+    name: Cloud Pipeline Tests
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pytest pytest-cov scikit-learn numpy scipy
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ tests/fault_injection/ \
+            --cov=cloud/lambda \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            -v
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+        continue-on-error: true
+
+  train-model:
+    name: Model Training Validation
+    runs-on: ubuntu-22.04
+    needs: test-cloud
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install scikit-learn numpy scipy
+
+      - name: Train and validate model
+        run: |
+          python cloud/sagemaker/train_model.py \
+            --n_per_class 500 \
+            --model_dir /tmp/model_artifacts
+
+      - name: Check accuracy threshold
+        run: |
+          python - <<'EOF'
+          import json
+          with open("/tmp/model_artifacts/metrics.json") as f:
+              m = json.load(f)
+          assert m["f1_weighted"] >= 0.95, f"F1 {m['f1_weighted']} below 95% threshold"
+          assert m["accuracy"]    >= 0.95, f"Accuracy {m['accuracy']} below 95% threshold"
+          print(f"Model OK: accuracy={m['accuracy']}, f1={m['f1_weighted']}")
+          EOF
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Lint cloud code
+        run: ruff check cloud/ tests/ --ignore E501,E402
