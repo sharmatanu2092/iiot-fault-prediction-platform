@@ -1,4 +1,4 @@
-# iiot-fault-prediction-platform
+# IIoT-fault-prediction-platform
 
 Real-time predictive maintenance platform for smart manufacturing. Ingests multi-sensor telemetry from industrial equipment, runs time and frequency domain feature extraction on AWS Lambda, and classifies equipment faults using a Random Forest model hosted on SageMaker. Validated at **95%+ weighted F1** across five fault classes with sub-500ms end-to-end pipeline latency.
 
