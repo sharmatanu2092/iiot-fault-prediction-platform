@@ -2,11 +2,7 @@
 
 Real-time predictive maintenance platform for smart manufacturing. Ingests multi-sensor telemetry from industrial equipment, runs time and frequency domain feature extraction on AWS Lambda, and classifies equipment faults using a Random Forest model hosted on SageMaker. Validated at **95%+ weighted F1** across five fault classes with sub-500ms end-to-end pipeline latency.
 
-[![CI](https://github.com/tanusharma/iiot-fault-prediction-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/tanusharma/iiot-fault-prediction-platform/actions)
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![C++](https://img.shields.io/badge/C++-17-blue)
-![AWS](https://img.shields.io/badge/AWS-IoT%20Core%20%7C%20Lambda%20%7C%20SageMaker-orange)
-![License](https://img.shields.io/badge/license-MIT-green)
+
 
 ---
 
@@ -281,11 +277,8 @@ pytest tests/ -v
 
 ---
 
-## License
 
-MIT. See [LICENSE](LICENSE).
 
-## Author
 
 Tanu Sharma
 [LinkedIn](https://linkedin.com/in/tanusharma) | [GitHub](https://github.com/tanusharma)
